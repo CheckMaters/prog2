@@ -3,10 +3,10 @@
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
-
 #include "generalFunctions.h"
 #include "columnsorter.h"
 #include "movieListData.h"
+#include "hashTable.h"
 #include "tokenizer.h"
 #define TRUE				1
 #define FALSE				0
@@ -37,7 +37,7 @@ one_Movie_Values* make_Movie_Value_List(char* movie_Line, sorting_Column_Info* c
 		temp_Word_Token = getNextToken(&temp_word);
 		int index = 0;
 		//
-		while(column_Information->index > index) {														// Go to (column_Information->index)th field, which is the sorting column word
+		while(column_Information->index > index) {	// Go to (column_Information->index)th field, which is the sorting column word
 			// Key and token are not equal. Continue loop
 			temp_Word_Token = getNextToken(&temp_word);
 			index++;
@@ -93,6 +93,8 @@ one_Movie_Values* make_Movie_Value_List(char* movie_Line, sorting_Column_Info* c
 
 			}
 		}
+        hash_Struct * hash_Table = (hash_Struct *) malloc (sizeof(hash_Table) * 28);
+        hash_Table = create_Hash_Table(hash_Table);
 	}
 
 	return temp_Pointer_To_Movie;
