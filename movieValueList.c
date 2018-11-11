@@ -10,6 +10,8 @@
 
 
 //Inserting one movie to the movie list
+
+
 int add_One_Movie_To_The_List(movie_Record* pointer_To_MovieList_Array, one_Movie_Values* pointer_To_Movie) {
 	int output_Result = 1;
 	// checking inputs if they are correct or not
