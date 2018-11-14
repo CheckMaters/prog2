@@ -1,15 +1,12 @@
 #include <stdio.h>
-#include <stdlib.>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
-#include "scannerCSVsorter.h"
-#include "scannerCSVsorter.c"
 #include "hashTable.h"
 
 
 //this function will create a hash table with known 28 column names
 //in order to get the hash key divide the int value of char * with 28
-hash_Struct * create_Hash_Table (hash_Struct * hash_Table){
+void * create_Hash_Table (hash_Struct * hash_Table){
     (hash_Table + 0)->column_Name = (char *) malloc (sizeof(char) * strlen("director_name"));
     strcpy((hash_Table + 0)->column_Name, "director_name");
     (hash_Table + 0)->index = 1;
@@ -45,7 +42,7 @@ hash_Struct * create_Hash_Table (hash_Struct * hash_Table){
     (hash_Table + 1)->index = 6;
     (hash_Table + 1)->column_Value = NULL;
     
-        hash_Struct * ptr4;
+        hash_Struct * ptr4 = (hash_Struct *) malloc (sizeof(hash_Struct));
         ptr4->column_Name = (char *) malloc (sizeof(char) * strlen("movie_title"));
         strcpy(ptr4->column_Name, "movie_title");
         ptr4->index = 11;
@@ -227,5 +224,5 @@ hash_Struct * create_Hash_Table (hash_Struct * hash_Table){
     
     
     
-    return hash_Table;
+    return NULL;
 }
