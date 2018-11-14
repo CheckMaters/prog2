@@ -17,6 +17,8 @@
 #define FALSE				0
 
 
+movie_Record movie_List;
+
 int main(int argc, char* argv[]) {
 	//checking if the input argument is correct or Not
 int return_Val_For_Main = -1;
@@ -472,15 +474,8 @@ int sort_The_List(char* sort_By_This_Value, FILE* file, char * output_Dir, char 
 					if necessary
 					*/
 
-
-
 	// To hold movie list array
-	movie_Record movie_List;
-    
-    
-    hash_Struct hash_Table[28];
-    //creating hash_Table and filling in column_name values and everything for all the columns
-    hash_Table[0]->column_Name
+	//movie_Record movie_List;
     
 
 	//Intializing movie_Record named movie_List
@@ -495,17 +490,32 @@ int sort_The_List(char* sort_By_This_Value, FILE* file, char * output_Dir, char 
 			header_Of_File.data = (char*)malloc (sizeof(char) * read_File.length_Of_Data);
 			header_Of_File.length_Of_Data = read_File.length_Of_Data;
 
-
-
-
-
 			strcpy(header_Of_File.data, read_File.data);			// copy of header line before tokenizing
 			//head_Of_File keeps record of the first line that is that name of all the columns
+            
+            int temp_xyz = 1;
+            Tokenizer token_Word;
+            initialize_Tokenizer(token_Word, header_Of_File.data, ',','\"');
+            char * word;
+            word = getNextToken(&token_Word);
+            char ** array_Of_Columns = (char **) malloc (sizeof(char *) * temp_xyz);
+            while(word != NULL) {
+                temp_xyz++;
+                word = getNextToken(&token_Word);
+            }
+            
+            int temp_xyz_x = 0;
+            while (temp_xyx_x < temp_xyx) {
+                (array_Of_Columns + temp_xyz_z) = (char *) malloc (sizeof(char) * strlen(word));
+                strcpy(array_Of_Columns + temp_xyz_z, word);
+                temp_xyz_x++;
+            }
 
 			if (get_Column_Index_To_Sort_List(sort_By_This_Value, &column_Info, read_File.data)) {
 							fprintf(stderr, "Error! Unable to parse the input column name\n");
-						}
-						else {
+                            return -1;
+            }
+            else {
 				// Read data line by line. Creates record and put them into array
 				while (getline(&(read_File.data), &(read_File.length_Of_Data), file) > 0) {
 					delete_Newline_Char_At_The_End(&read_File);
@@ -516,8 +526,22 @@ int sort_The_List(char* sort_By_This_Value, FILE* file, char * output_Dir, char 
 					}
 					else {
 						fprintf(stderr, "Error! Unable to create movie list!\n");
+                        return -1;
 					}
-		}
+		  }
+                
+                
+/***************************************/
+//freeing arrays_Of_Columns
+                temp_xyz--;
+                while (temp_xyz < 0) {
+                    free(array_Of_Columns + temp_xyz);
+                    temp_xyz--;
+                }
+/**************************************/
+                
+                
+                
 				/*
 				merge sort will sort the array of movie list based
 				on the index type and column name entered in the
