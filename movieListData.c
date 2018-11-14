@@ -22,98 +22,125 @@ movie with linked list of values attached to it
 This function also reads the type of the input value
 of each values attached to that movie.
 */
-one_Movie_Values* make_Movie_Value_List(char* movie_Line, sorting_Column_Info* column_Information) {
+one_Movie_Values* make_Movie_Value_List(char* movie_Line, sorting_Column_Info* column_Information, char ** array_Of_Columns, no_Of_Columns_In_Header) {
 
 		one_Movie_Values * temp_Pointer_To_Movie = (one_Movie_Values*)malloc(sizeof(one_Movie_Values) + strlen(movie_Line));
 		strcpy(temp_Pointer_To_Movie->recordData, movie_Line);						//copying the line from the file to temporary pointer
-	// Find sorting key
-	if (temp_Pointer_To_Movie != NULL) {
-		Tokenizer temp_word;
-		initialize_Tokenizer(&temp_word, movie_Line, ',', '\"');
+	
+        // Find sorting key
+	   if (temp_Pointer_To_Movie != NULL) {
+		  Tokenizer temp_word;
+		  initialize_Tokenizer(&temp_word, movie_Line, ',', '\"');
 
-		char* bufferStart = movie_Line;																// Pointer movie_Line will move along the string. Remember the start here.
-		char* temp_Word_Token;
-
-		temp_Word_Token = getNextToken(&temp_word);
-		int index = 0;
+		  char* bufferStart = movie_Line;																// Pointer movie_Line will move along the string. Remember the start here.
+           char* temp_Word_Token;
+           
+           temp_Word_Token = getNextToken(&temp_word);
+           int index = 0;
 		//
-		while(column_Information->index > index) {	// Go to (column_Information->index)th field, which is the sorting column word
-			// Key and token are not equal. Continue loop
-			temp_Word_Token = getNextToken(&temp_word);
-			index++;
-		}
-		//
-		int offset;
-		int length;																						// Length of the column word
-		if (temp_Word_Token == NULL) {
-			offset = strlen(temp_Pointer_To_Movie->recordData);
-			length = 0;
-		}
-		else {
-			offset = temp_Word_Token - bufferStart;
-			length = strlen(temp_Word_Token);
-		}
-		//
-		temp_Pointer_To_Movie->sorting_Key = temp_Pointer_To_Movie->recordData + offset;
-		temp_Pointer_To_Movie->sorting_Key_Term = temp_Pointer_To_Movie->recordData + offset + length;
-		temp_Pointer_To_Movie->chHold = *temp_Pointer_To_Movie->sorting_Key_Term;									// Remember the char at  temp_Pointer_To_Movie->sorting_Key_Term (to be reset later)
-		*temp_Pointer_To_Movie->sorting_Key_Term = '\0';															// Set temp_Pointer_To_Movie->sorting_Key_Term to null. Now temp_Pointer_To_Movie->pSKey is a proper string
-		//
-		temp_Pointer_To_Movie->long_Integer_Value = 0L;																			// Trying to change into long
-		temp_Pointer_To_Movie->floating_Value = 0.0f;																		// Trying to change into float
-		char	cTemp;
-		if (length > 0) {
-			char* pDot = strchr(temp_Pointer_To_Movie->sorting_Key, '.');
+           while(column_Information->index > index) {	// Go to (column_Information->index)th field, which is the sorting column word
+               
+               // Key and token are not equal. Continue loop
+               temp_Word_Token = getNextToken(&temp_word);
+			 index++;
+		  }
 
+           
+		  int offset;
+		  int length;																						// Length of the column word
+		  if (temp_Word_Token == NULL) {
+              offset = strlen(temp_Pointer_To_Movie->recordData);
+              length = 0;
+		  }
+		  else {
+              offset = temp_Word_Token - bufferStart;
+              length = strlen(temp_Word_Token);
+		  }
+		
+           
+		  temp_Pointer_To_Movie->sorting_Key = temp_Pointer_To_Movie->recordData + offset;
+		  temp_Pointer_To_Movie->sorting_Key_Term = temp_Pointer_To_Movie->recordData + offset + length;
+		  temp_Pointer_To_Movie->chHold = *temp_Pointer_To_Movie->sorting_Key_Term;									// Remember the char at  temp_Pointer_To_Movie->sorting_Key_Term (to be reset later)
+		  *temp_Pointer_To_Movie->sorting_Key_Term = '\0';															// Set temp_Pointer_To_Movie->sorting_Key_Term to null. Now temp_Pointer_To_Movie->pSKey is a proper string
+		
+           
+		  temp_Pointer_To_Movie->long_Integer_Value = 0L;																			// Trying to change into long
+		  temp_Pointer_To_Movie->floating_Value = 0.0f;																		// Trying to change into float
+		  char	cTemp;
+		
+           
+           if (length > 0) {
+                    char* pDot = strchr(temp_Pointer_To_Movie->sorting_Key, '.');
 
+			     if (column_Information->index_Type_SIF == INDEX_TYPE_INTEGER) {
+                        if (!pDot && sscanf(temp_Pointer_To_Movie->sorting_Key, "%ld%c", &(temp_Pointer_To_Movie->long_Integer_Value), &cTemp) == 1) {				// integer
+                                temp_Pointer_To_Movie->floating_Value = temp_Pointer_To_Movie->long_Integer_Value;
+                        }
+                        else if (pDot && sscanf(temp_Pointer_To_Movie->sorting_Key, "%f%c", &(temp_Pointer_To_Movie->floating_Value), &cTemp) == 1) {			// float
+                                column_Information->index_Type_SIF = INDEX_TYPE_FLOAT;
+                        }
+                        else {
+                     column_Information->index_Type_SIF = INDEX_TYPE_STRING;
+                        }
+                 }
+                 else if (column_Information->index_Type_SIF == INDEX_TYPE_FLOAT) {
+                        if (!pDot && sscanf(temp_Pointer_To_Movie->sorting_Key, "%ld%c", &(temp_Pointer_To_Movie->long_Integer_Value), &cTemp) == 1) {
+                                temp_Pointer_To_Movie->floating_Value = temp_Pointer_To_Movie->long_Integer_Value;
+                        }
+                        else if (pDot && sscanf(temp_Pointer_To_Movie->sorting_Key, "%f%c", &(temp_Pointer_To_Movie->floating_Value), &cTemp) == 1) {
 
-			if (column_Information->index_Type_SIF == INDEX_TYPE_INTEGER) {
-				if (!pDot && sscanf(temp_Pointer_To_Movie->sorting_Key, "%ld%c", &(temp_Pointer_To_Movie->long_Integer_Value), &cTemp) == 1) {				// integer
-					temp_Pointer_To_Movie->floating_Value = temp_Pointer_To_Movie->long_Integer_Value;
-				}
-				else if (pDot && sscanf(temp_Pointer_To_Movie->sorting_Key, "%f%c", &(temp_Pointer_To_Movie->floating_Value), &cTemp) == 1) {			// float
-					column_Information->index_Type_SIF = INDEX_TYPE_FLOAT;
-				}
-				else {
-					column_Information->index_Type_SIF = INDEX_TYPE_STRING;
-				}
-			}
-			else if (column_Information->index_Type_SIF == INDEX_TYPE_FLOAT) {
-				if (!pDot && sscanf(temp_Pointer_To_Movie->sorting_Key, "%ld%c", &(temp_Pointer_To_Movie->long_Integer_Value), &cTemp) == 1) {
-					temp_Pointer_To_Movie->floating_Value = temp_Pointer_To_Movie->long_Integer_Value;
-				}
-				else if (pDot && sscanf(temp_Pointer_To_Movie->sorting_Key, "%f%c", &(temp_Pointer_To_Movie->floating_Value), &cTemp) == 1) {
+                        }
+				        else {
+                                column_Information->index_Type_SIF = INDEX_TYPE_STRING;
+				        }
+                 }
+                else {
 
-				}
-				else {
-					column_Information->index_Type_SIF = INDEX_TYPE_STRING;
-				}
-			}
-			else {
-
-			}
-		}
+                }
+           }
+        
+        
+        
+        
+        
+        
+        
         hash_Struct * hash_Table = (hash_Struct *) malloc (sizeof(hash_Table) * 28);
-        create_Hash_Table(hash_Table);
+        create_Hash_Table(hash_Table);          //this will create hash_Table with 28 entries entered in their with index number
         
         Tokenizer temp_Word_Two;
         initialize_Tokenizer(&temp_Word_Two, movie_Line, ',', '\"');
         char * temp_Word_Two_Token;
         int temp_count = 1;
         temp_Word_Two_Token = getNextToken(&temp_Word_Two);
-        
+
+//counts the number of column in a movie
         while (temp_Word_Two_Token != NULL){
             temp_count++;
             temp_Word_Two_Token = getNextToken(&temp_Word_Two);
         }
+     
         
+//this checks if the number of columns in each file is same as the number of columns in the heading.
+        if(temp_count != no_Of_Columns_In_Header) {
+            fprintf(stderr, "Error! Number of Columns are different from header.");
+            return NULL;
+        }
         
+           
+        //this array pointer will keep all the column values of a movie   
         char ** list_Of_Given_Column = (char **) malloc (sizeof(char *) * temp_count);
+        char ** column_Value_Array = (char **) malloc (sizeof(char *) * 28);
+           
+           if(list_Of_Given_Column == NULL || column_Value_Array == NULL){
+               fprintf(stderr, "Error! Unable to allocate memory.");
+           }
         
         Tokenizer temp_Word_Three;
         initialize_Tokenizer(&temp_Word_Three, movie_Line, ',', '\"');
         char * temp_Word_Three_Token;
-        
+
+//this populatest the array with all the column values of movies
         temp_count = 0;
         while (temp_Word_Three_Token != NULL) {
             temp_Word_Three_Token = getNextToken(&temp_Word_Three);
@@ -123,13 +150,40 @@ one_Movie_Values* make_Movie_Value_List(char* movie_Line, sorting_Column_Info* c
         }
 	}
     
+//adding column value to the hash_Table
     int hash_Key;
     int temp_i = 0;
     while (i < (temp_count+1)){
-        hash_Key = ((int)(*(list_Of_Given_Column + temp_i))) % 28;
+        hash_Key = ((int)(*(array_Of_Columns + temp_i))) % 28;
+        hash_Struct * ptr = (hash_Table + hash_Key);
+        
+        while(ptr != NULL){
+            if(ptr->column_Name == *(array_Of_Columns + temp_i)){
+                strcpy(ptr->column_Value, *(list_Of_Given_Column));
+                break;
+            }
+        }
+        if(ptr == NULL){
+            fprintf(stderr, "Error! Unknown column.");
+            return NULL;
+        }
         
     }
 
+    
+    
+
+    
+    
+    
+/****************************************/
+    //clearing the hash_Table 
+    int temp_s = 0;
+    while (temp_s < 28){
+        free(hash_Table + temp_s);
+        temp_s++;
+    }  
+/****************************************/
     
     
     
