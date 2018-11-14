@@ -493,24 +493,34 @@ int sort_The_List(char* sort_By_This_Value, FILE* file, char * output_Dir, char 
 			strcpy(header_Of_File.data, read_File.data);			// copy of header line before tokenizing
 			//head_Of_File keeps record of the first line that is that name of all the columns
             
-            int temp_xyz = 1;
+            int no_Of_Columns_In_Header = 1;
             Tokenizer token_Word;
             initialize_Tokenizer(token_Word, header_Of_File.data, ',','\"');
             char * word;
             word = getNextToken(&token_Word);
-            char ** array_Of_Columns = (char **) malloc (sizeof(char *) * temp_xyz);
+            char ** array_Of_Columns = (char **) malloc (sizeof(char *) * temp_xyz);  //this array stores names of columns from header
+           
+            //this while loop counts the number of column in a given file
             while(word != NULL) {
-                temp_xyz++;
+                no_Of_Columns_In_Header++;
                 word = getNextToken(&token_Word);
             }
             
+
+/****************************************/
+//This array will keep all the columns of the particular file in it,
+//so that it can be used to get the hash_Key for each column of the movies
             int temp_xyz_x = 0;
-            while (temp_xyx_x < temp_xyx) {
-                (array_Of_Columns + temp_xyz_z) = (char *) malloc (sizeof(char) * strlen(word));
-                strcpy(array_Of_Columns + temp_xyz_z, word);
+            
+//stuffing the array with column names
+            while (temp_xyx_x < no_Of_Columns_In_Header) {
+                (array_Of_Columns + temp_xyz_x) = (char *) malloc (sizeof(char) * strlen(word));
+                strcpy(array_Of_Columns + temp_xyz_x, word);
                 temp_xyz_x++;
             }
 
+            
+//this is where we start stuffing the record pointing to the structs containing info about each movie
 			if (get_Column_Index_To_Sort_List(sort_By_This_Value, &column_Info, read_File.data)) {
 							fprintf(stderr, "Error! Unable to parse the input column name\n");
                             return -1;
@@ -520,7 +530,7 @@ int sort_The_List(char* sort_By_This_Value, FILE* file, char * output_Dir, char 
 				while (getline(&(read_File.data), &(read_File.length_Of_Data), file) > 0) {
 					delete_Newline_Char_At_The_End(&read_File);
 
-					one_Movie_Values* pRecord = make_Movie_Value_List(read_File.data, &column_Info);
+            one_Movie_Values* pRecord = make_Movie_Value_List(read_File.data, &column_Info, array_Of_Columns,no_Of_Columns_In_Header);
 					if (pRecord) {
 						add_One_Movie_To_The_List(&movie_List, pRecord);
 					}
@@ -533,10 +543,10 @@ int sort_The_List(char* sort_By_This_Value, FILE* file, char * output_Dir, char 
                 
 /***************************************/
 //freeing arrays_Of_Columns
-                temp_xyz--;
-                while (temp_xyz < 0) {
-                    free(array_Of_Columns + temp_xyz);
-                    temp_xyz--;
+                no_Of_Columns_In_Header--;
+                while (no_Of_Columns_In_Header < 0) {
+                    free(array_Of_Columns + no_Of_Columns_In_Header);
+                    no_Of_Columns_In_Header--;
                 }
 /**************************************/
                 
