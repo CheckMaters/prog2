@@ -632,7 +632,7 @@ void * scan_Directory(void * thepath){
 		pthread_t tid;
 		
 		pthread_attr_t attr;
-		pthread_create(&tid, &attr, scan_Directory, NULL); 
+		pthread_create(&tid, &attr, scan_Directory, (char*) thepath); 
 
 		tidstruct * name;
 		name = malloc(sizeof(tidstruct));	
