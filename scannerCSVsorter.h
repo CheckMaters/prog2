@@ -24,7 +24,7 @@ finding .csv files. It will recurse through
 the same function if it detects sub-diretories
 within provided directory.
 */
-int scan_Directory (DIR * directory, char * sorting_Column, char * path, char * output_Directory, int * counter);
+(void*) scan_Directory (void* thepath);
 
 
 //this function checks if the given char string is directory or not
