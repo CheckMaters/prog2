@@ -551,7 +551,23 @@ int sort_The_List(char* sort_By_This_Value, FILE* file, char * output_Dir, char 
 }
 
 
-
+void * is_DIR_CSV (void * file_Name){
+	char * file = (char *)file_Name;
+	int * temp = (int *) malloc (sizeof(int));
+	* temp = is_Directory(file);
+	if((*temp) == 0){
+		return temp;			//returning 0 because it's a directory
+	} else{
+		* temp = is_CSV_File(file, sort_By_This_Value);
+		if((* temp) == 0){
+			*temp = 1;
+			return temp;		//returning 1 because it's a CSV file
+		} else {
+			* temp = -1;
+			return temp;	//returning -1 because it's not a directory and not a CSV file
+		}
+	}
+}
 
 
 //this checks if the given char string is directory or not
