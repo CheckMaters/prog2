@@ -55,6 +55,8 @@ int main(int argc, char* argv[]) {
 return_Val_For_Main = -1;
 parents_PID = getpid();
 head = NULL;
+directory_Char = malloc(sizeof(char)*3000);
+output_Place = malloc(sizeof(char)*100);
 
 //checking if the input argument is correct or Not
 	if(argc == 3) {
@@ -556,18 +558,22 @@ void * is_DIR_CSV (void * file_Name){
 	int * temp = (int *) malloc (sizeof(int));
 	* temp = is_Directory(file);
 	if((*temp) == 0){
-		return temp;			//returning 0 because it's a directory
-	} else{
+		pthread_exit(temp);			//returning 0 because it's a directory
+	} else {
 		* temp = is_CSV_File(file, sort_By_This_Value);
 		if((* temp) == 0){
 			*temp = 1;
-			return temp;		//returning 1 because it's a CSV file
+			pthread_exit(temp);		//returning 1 because it's a CSV file
 		} else {
 			* temp = -1;
-			return temp;	//returning -1 because it's not a directory and not a CSV file
+			pthread_exit(temp);	//returning -1 because it's not a directory and not a CSV file
 		}
 	}
 }
+
+
+
+
 
 
 //this checks if the given char string is directory or not
@@ -575,6 +581,13 @@ int is_Directory(const char * name) {
 	DIR * temp_dir = opendir(name);
 	if (temp_dir != NULL){
 		closedir(temp_dir);
+		if(strcmp(name + (strlen(name)-2),"/.") == 0){
+			return -1;
+		} else if(strcmp(name + (strlen(name)-3),"/..") == 0){
+			return -1;
+		}
+	
+
 		return 0;	//returns 0 if it's directory, else -1
 	}
 	return -1;
@@ -624,8 +637,9 @@ column user wants to sort file on.
 //int scan_Directory(DIR * directory, char * sorting_Column, char * path, char * output_Directory){
 
 void * scan_Directory(void * thepath){
-	printf("%shello\n",(char*)thepath);
-	directory = opendir((char*)thepath);
+	char* holder = (char*) thepath;
+	printf("%shello\n", holder);
+	directory = opendir(holder);
 
 	/*
 	if(directory == NULL){
@@ -638,21 +652,30 @@ void * scan_Directory(void * thepath){
 	//int return_Value = -500;
 	
 	struct dirent * directory_Info;
-	char current_dir_path[strlen((char*)thepath) + 1];
-	strcpy(current_dir_path, (char*)thepath);
+	char current_dir_path[strlen(holder) + 1];
+	strcpy(current_dir_path, holder);
 	
 	while ((directory_Info = readdir(directory))!= NULL){
-		//printf("%s\n",directory_Char);
-		//Thread id
+		printf("%sholder\n", holder);
+		
+		holder = strcat(holder, "/");
+		holder = strcat(holder, directory_Info->d_name);
+		
 		printf("%s d name outside loop\n",directory_Info->d_name);		
 		pthread_t tid;
 		
 		pthread_attr_t attr;
-		pthread_create(&tid, &attr, scan_Directory, (char*) thepath); 
+		pthread_create(&tid, &attr, is_DIR_CSV, holder); 
+		
 
+		int * result;
+		pthread_join(tid, (void**)(&result));
+		
+		printf("%d the result\n", *result);
 		tidstruct * name;
 		name = malloc(sizeof(tidstruct));	
 		name->tid = pthread_self();
+		
 		if (head == NULL){
 			head = name;
 		} else {
@@ -666,10 +689,9 @@ void * scan_Directory(void * thepath){
 			continue;	
 		}
 		printf("%ssdfasdfsdf\n",directory_Char);
-		thepath = strcat(thepath, "/");
-		thepath = strcat(thepath, directory_Info->d_name);
+		
 		//checks if the current file that file pointer points to is a directory or not
-		int return_Value = is_Directory(thepath);
+		
 
 		/*
 		if return value is zero, it means this is directory
@@ -679,7 +701,7 @@ void * scan_Directory(void * thepath){
 
 		pthread_t tid2;
 		pthread_attr_t attr2;
-                pthread_create(&tid2, &attr2, scan_Directory((void*)thepath), NULL);
+                pthread_create(&tid2, &attr2, scan_Directory, holder);
 
                 tidstruct * name2;
 		name2 =  malloc(sizeof(tidstruct));
@@ -692,15 +714,17 @@ void * scan_Directory(void * thepath){
                         head = name2;
                 }
 
-		if(return_Value == 0) {
+		
 			//**************this means it is directory, perform recurssion*****************
 		
-			strcpy(current_dir_path, thepath);	//changing the current path for child process as it is going to be at sub directory level
-			directory = opendir(thepath);	//changing directory to sub directory for child process
+			strcpy(current_dir_path, holder);	//changing the current path for child process as it is going to be at sub directory level
+			directory = opendir(holder);	//changing directory to sub directory for child process
+			
+			/*
 			pthread_t tid2;
 		
 			pthread_attr_t attr2;
-			pthread_create(&tid2, &attr2, scan_Directory((void*)thepath), NULL);
+			pthread_create(&tid2, &attr2, scan_Directory, holder);
 			
 			tidstruct * name2;
 			name2 =  malloc(sizeof(tidstruct));	
@@ -713,11 +737,11 @@ void * scan_Directory(void * thepath){
 				head = name2;
 			}
 			
-		} else {
+		
 			
 			int return_Value = is_CSV_File(thepath, sort_By_This_Value);
 			if(return_Value == 0){
-				//************this means it is CSV file, perform sorting******************
+				************this means it is CSV file, perform sorting******************
 				
 				
 
@@ -730,7 +754,7 @@ void * scan_Directory(void * thepath){
 				strcpy(thepath, current_dir_path);
 				pthread_exit(0); //continuing to the next loop because read value isn't directory or CSV file
 			}
-		}
+			*/
 
 	}
 		
