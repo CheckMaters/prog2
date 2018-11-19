@@ -92,16 +92,19 @@ int main(int argc, char* argv[]) {
 
 			sort_By_This_Value = argv[2]; 
         
-            scan_Directory(sorting_Directory_Char);
+            pthread_t main_Thread;
+            pthread_attr_t main_Attr;
+            pthread_attr_init(&main_Attr);
+            pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+            pthread_join(main_Thread, NULL);
+        
+            //scan_Directory(sorting_Directory_Char);
             mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
             print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
             printf("Total Threads : %d.\n", total_Threads);
         
-			//return_Val_For_Main = scan_Directory(directory, sort_By_This_Value, directory_Char, output_Place, &PID_Counter);
-			//sending directory char for output path too, because output directory is not specified
+			
 			closedir(sorting_Directory_Dir);
-            //free(sorting_Directory_Char);
-           // free(output_Place_Char);
                 if (movie_List.pRecArray != NULL) {
 		              clearMovieList(&movie_List);
 	            }
@@ -125,15 +128,22 @@ int main(int argc, char* argv[]) {
 					strcpy(output_Place_Char, argv[4]);
                     
 //output_Place_Char = argv[4];
-				
+				    
+                    
+                    
+                    pthread_t main_Thread;
+                    pthread_attr_t main_Attr;
+                    pthread_attr_init(&main_Attr);
+                    pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                    pthread_join(main_Thread, NULL);
+        
 
-					scan_Directory(sorting_Directory_Char);
+					//scan_Directory(sorting_Directory_Char);
                     mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                     print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
 					closedir(sorting_Directory_Dir);
-                    //free(sorting_Directory_Char);
-                   // free(output_Place_Char);
+                    
                     if (movie_List.pRecArray != NULL) {
 		              clearMovieList(&movie_List);
 	                   }
@@ -164,15 +174,24 @@ int main(int argc, char* argv[]) {
 					sort_By_This_Value = argv[2];
 				
                     
-                    scan_Directory(sorting_Directory_Char);
+                    
+                    
+                    pthread_t main_Thread;
+                    pthread_attr_t main_Attr;
+                    pthread_attr_init(&main_Attr);
+                    pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                    pthread_join(main_Thread, NULL);
+        
+                    
+                    
+                    //scan_Directory(sorting_Directory_Char);
                     mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                     print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
             printf("Total Threads : %d.\n", total_Threads);
                     
                     closedir(sorting_Directory_Dir);
-                    free(sorting_Directory_Char);
-                    free(output_Place_Dir);
+                    
                     if (movie_List.pRecArray != NULL) {
 		              clearMovieList(&movie_List);
 	                }
@@ -199,7 +218,16 @@ int main(int argc, char* argv[]) {
 	                strcpy(sorting_Directory_Char, argv[2]);
 
                     
-                    scan_Directory(sorting_Directory_Char);
+                    
+                    pthread_t main_Thread;
+                    pthread_attr_t main_Attr;
+                    pthread_attr_init(&main_Attr);
+                    pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                    pthread_join(main_Thread, NULL);
+        
+                    
+                    
+                    //scan_Directory(sorting_Directory_Char);
                     mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                     print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
@@ -208,8 +236,7 @@ int main(int argc, char* argv[]) {
                     
                     
 					closedir(sorting_Directory_Dir);
-				    free(sorting_Directory_Char);
-                    free(output_Place_Char);
+				   
                     if (movie_List.pRecArray != NULL) {
 		              clearMovieList(&movie_List);
 	                }
@@ -234,7 +261,15 @@ int main(int argc, char* argv[]) {
 					sort_By_This_Value = argv[4];
 					
                     
-                    scan_Directory(sorting_Directory_Char);
+                    pthread_t main_Thread;
+                    pthread_attr_t main_Attr;
+                    pthread_attr_init(&main_Attr);
+                    pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                    pthread_join(main_Thread, NULL);
+        
+                    
+                    
+                    //scan_Directory(sorting_Directory_Char);
                     mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                     print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
@@ -243,8 +278,7 @@ int main(int argc, char* argv[]) {
                     
                     
 					closedir(sorting_Directory_Dir);
-					free(sorting_Directory_Char);
-                    free(output_Place_Char);
+					
                     if (movie_List.pRecArray != NULL) {
 		              clearMovieList(&movie_List);
 	                }
@@ -290,7 +324,14 @@ int main(int argc, char* argv[]) {
 						}
                             
                     
-                        scan_Directory(sorting_Directory_Char);
+                        pthread_t main_Thread;
+                        pthread_attr_t main_Attr;
+                        pthread_attr_init(&main_Attr);
+                        pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                        pthread_join(main_Thread, NULL);
+        
+                    
+                        //scan_Directory(sorting_Directory_Char);
                         mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                         print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
@@ -301,8 +342,7 @@ int main(int argc, char* argv[]) {
                     
                     
 						closedir(sorting_Directory_Dir);
-                        free(sorting_Directory_Char);
-                        free(output_Place_Char);
+                        
                         if (movie_List.pRecArray != NULL) {
 		                      clearMovieList(&movie_List);
 	                   }
@@ -332,7 +372,15 @@ int main(int argc, char* argv[]) {
 						}
 
                         
-                        scan_Directory(sorting_Directory_Char);
+                        pthread_t main_Thread;
+                        pthread_attr_t main_Attr;
+                        pthread_attr_init(&main_Attr);
+                        pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                        pthread_join(main_Thread, NULL);
+        
+                        
+                    
+                        //scan_Directory(sorting_Directory_Char);
                         mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                         print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
@@ -343,8 +391,7 @@ int main(int argc, char* argv[]) {
                     
                     
 						closedir(sorting_Directory_Dir);
-						free(sorting_Directory_Char);
-                        free(output_Place_Char);
+						
                         if (movie_List.pRecArray != NULL) {
                                 clearMovieList(&movie_List);
 	                       }
@@ -382,7 +429,15 @@ int main(int argc, char* argv[]) {
 						}
                         
                     
-                        scan_Directory(sorting_Directory_Char);
+                        pthread_t main_Thread;
+                        pthread_attr_t main_Attr;
+                        pthread_attr_init(&main_Attr);
+                        pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                        pthread_join(main_Thread, NULL);
+                
+                    
+                    
+                        //scan_Directory(sorting_Directory_Char);
                         mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                         print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
@@ -392,8 +447,7 @@ int main(int argc, char* argv[]) {
                     
                     
 						closedir(sorting_Directory_Dir);
-						free(sorting_Directory_Char);
-                        free(output_Place_Char);
+						
                         if (movie_List.pRecArray != NULL) {
                             clearMovieList(&movie_List);
                         }
@@ -421,8 +475,16 @@ int main(int argc, char* argv[]) {
 						else {
 							closedir(output_Place_Dir);
 						}
-
-                        scan_Directory(sorting_Directory_Char);
+                        
+                    
+                        pthread_t main_Thread;
+                        pthread_attr_t main_Attr;
+                        pthread_attr_init(&main_Attr);
+                        pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                        pthread_join(main_Thread, NULL);
+                
+                    
+                        //scan_Directory(sorting_Directory_Char);
                         mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                         print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
@@ -431,8 +493,7 @@ int main(int argc, char* argv[]) {
                         
                     
 						closedir(sorting_Directory_Dir);
-						free(sorting_Directory_Char);
-                        free(output_Place_Char);
+						
                         if (movie_List.pRecArray != NULL) {
 		                  clearMovieList(&movie_List);
                         }
@@ -468,8 +529,16 @@ int main(int argc, char* argv[]) {
 						else {
 							closedir(output_Place_Dir);
 						}
-
-                        scan_Directory(sorting_Directory_Char);
+                        
+                    
+                        pthread_t main_Thread;
+                        pthread_attr_t main_Attr;
+                        pthread_attr_init(&main_Attr);
+                        pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                        pthread_join(main_Thread, NULL);
+        
+                        
+                        //scan_Directory(sorting_Directory_Char);
                         mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                         print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
@@ -478,8 +547,7 @@ int main(int argc, char* argv[]) {
             printf("Total Threads : %d.\n", total_Threads);
                     
 						closedir(sorting_Directory_Dir);
-                        free(sorting_Directory_Char);
-                        free(output_Place_Char);
+                        
                         if (movie_List.pRecArray != NULL) {
                             clearMovieList(&movie_List);
                         }
@@ -510,7 +578,14 @@ int main(int argc, char* argv[]) {
 						}
 
                         
-                        scan_Directory(sorting_Directory_Char);
+                        pthread_t main_Thread;
+                        pthread_attr_t main_Attr;
+                        pthread_attr_init(&main_Attr);
+                        pthread_create(&main_Thread, &main_Attr, scan_Directory, (void *)sorting_Directory_Char);
+                        pthread_join(main_Thread, NULL);
+        
+                    
+                        //scan_Directory(sorting_Directory_Char);
                         mergeSort((void**)movie_List.pRecArray, 0, movie_List.iSize - 1, &column_Info, pFuncCompare);
                         print_The_List( &movie_List, output_Place_Char, sort_By_This_Value);
                     
@@ -520,8 +595,7 @@ int main(int argc, char* argv[]) {
                     
                         
 						closedir(sorting_Directory_Dir);
-                        free(sorting_Directory_Char);
-                        free(output_Place_Char);
+                       
                         if (movie_List.pRecArray != NULL) {
 		                      clearMovieList(&movie_List);
                         }
@@ -1053,6 +1127,12 @@ void print_The_List( movie_Record* pRecordArray, char * path, char * column) {
 	strcat(output_File, column);
 	strcat(output_File, ".csv");
 
+    
+    if(*((*(pRecordArray->pRecArray))->printing_Line) == NULL){
+        return 0;
+    }
+    
+    
 	FILE * file = fopen(output_File, "w");
 if(file == NULL ){
 	fprintf(stderr, "Unable to open the output file.\n\n");
